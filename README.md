@@ -51,6 +51,8 @@
   
   ### Example Sketch
   ```
+  // A random sequencer with variable delay 
+  
   #include <Digit.h>                    //Include the Digit library
   
   Digit digit;                          //Create a Digit called digit. This object now has the methods above available to it.
