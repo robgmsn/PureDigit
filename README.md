@@ -34,7 +34,7 @@
   
   
   ### Example Sketch:
-  ,,,
+  '''
   #include <Digit.h>
   
   Digit digit;
@@ -53,4 +53,4 @@
      digit.dacWrite(random(4095));      //Output a random value between 0 and 4095, which is analogue +/- 10V
      delay(encPos);                     //Delay for encPos milliseconds.
   }
- ,,,
+ '''
