@@ -1,5 +1,5 @@
 /*
-  GMSN! Pure Digit v0.1
+  GMSN! Pure Digit v1
   28th July 2018
   cc-by 4.0
   Rob Spencer
