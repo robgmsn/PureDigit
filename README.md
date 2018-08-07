@@ -20,7 +20,8 @@
   It has a 2 Channel 12bit ADC In, 12bit DAC Out, a 24
   position rotary encoder with switch and a 7 segment LED display.
   
-  To install the library, click on "Download Zip" over there somewhere --->
+  To install the library, [download the zip](https://github.com/robgmsn/PureDigit/archive/master.zip)
+  
   Then follow the [Importing a .zip library how to](https://www.arduino.cc/en/Guide/Libraries#toc4).
   
   ### Sketches   
