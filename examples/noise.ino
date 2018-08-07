@@ -1,29 +1,12 @@
 
 
 /*
-  GMSN! Pure Digit v0.1
+  GMSN! Pure Digit
   28th July 2018
   cc-by 4.0
   Rob Spencer
-
-  Write various codes
-  Enable EEPROM
-  Trimming Inputs and Outputs and test for variation between modules
-
+  
   Noise
-  Clk Divider
-  Micro Tuner
-  Bit Crusher
-  Drums
-  Rhythm Player
-  Swing Machine
-  LFO
-  Step LFO
-  DC Level
-  Module Testing Functions
-  Frequency Counter
-  DC Meter
-
 */
 
 #include <Digit.h>
