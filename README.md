@@ -9,18 +9,19 @@
   
   [forum.gmsn.co.uk](https://forum.gmsn.co.uk)
   
-  ## Open Source Synth Designs.
+  Open Source Synth Designs.
   
+  ### Intro
   This library is used to control the GMSN! Pure Digit. A small programmable utility module which accepts +/- 10V in,
   does some digital processing, and outputs a +/-10V signal. It has a 2 Channel 12bit ADC In, 12bit DAC Out, a 24
   position rotary encoder with switch and a 7 segment LED display.
   
-  ### Examples:   
+  ### Examples   
   Noise, Clock Divider, Micro Tuner, Bit Crusher, Drums, Rhythm Player, Swing Machine, LFO, Step LFO,
   DC Level, Module Testing Functions, Frequency Counter, DC Meter
   
   
-  ### Methods:
+  ### Methods
   
   encodeVal(value) - Call this to increment or decrement a value with the rotary encoder.
   
@@ -38,7 +39,7 @@
   adcRead(channel) - Read a 20V P2P from the DAC, channel 1 or 2. Voltages as above.
   
   
-  ### Example Sketch:
+  ### Example Sketch
   ```
   #include <Digit.h>                    //Include the Digit library
   
