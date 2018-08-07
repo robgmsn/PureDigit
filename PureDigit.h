@@ -1,5 +1,5 @@
 /*
-  GMSN! Pure Digit v0.1
+  GMSN! Pure Digit v1
   28th July 2018
   cc-by 4.0
   Rob Spencer
@@ -31,9 +31,9 @@
   Example Sketch:
 
   <code>
-  #include <Digit.h>
+  #include <PureDigit.h>
 
-  Digit digit;
+  PureDigit digit;
 
   //Setup variables
   int encPos = 1;
@@ -58,15 +58,15 @@
 */
 
 
-#ifndef Digit_h
-#define Digit_h
+#ifndef PureDigit_h
+#define PureDigit_h
 
 #include <Arduino.h>
 #include <SPI.h>
 
-class Digit {
+class PureDigit {
 public:
-  Digit();
+  PureDigit();
   void begin();
   int encodeVal(int val);
   void displayLED(int digit, byte mode, bool dp);
