@@ -1,10 +1,15 @@
-  # GMSN! Pure Digit v0.1
+  # GMSN! Pure Digit
   28th July 2018
+  
   cc-by 4.0
+  
   Rob Spencer
-  gmsn.co.uk
-  forum.gmsn.co.uk
-  Open Source Synth Designs.
+  
+  [gmsn.co.uk](https://gmsn.co.uk)
+  
+  [forum.gmsn.co.uk](https://forum.gmsn.co.uk)
+  
+  ## Open Source Synth Designs.
   
   This library is used to control the GMSN! Pure Digit. A small programmable utility module which accepts +/- 10V in,
   does some digital processing, and outputs a +/-10V signal. It has a 2 Channel 12bit ADC In, 12bit DAC Out, a 24
@@ -34,7 +39,7 @@
   
   
   ### Example Sketch:
-  '''
+  ```
   #include <Digit.h>
   
   Digit digit;
@@ -53,4 +58,4 @@
      digit.dacWrite(random(4095));      //Output a random value between 0 and 4095, which is analogue +/- 10V
      delay(encPos);                     //Delay for encPos milliseconds.
   }
- '''
+ ```
