@@ -22,7 +22,7 @@
   
   To install the library
   
-  1. [download the zip](https://github.com/robgmsn/PureDigit/archive/master.zip)
+  1. [Download the zip](https://github.com/robgmsn/PureDigit/archive/master.zip)
   
   2. Follow the [Importing a .zip library how to](https://www.arduino.cc/en/Guide/Libraries#toc4).
   
