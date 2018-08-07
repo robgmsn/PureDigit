@@ -9,9 +9,9 @@
   Noise
 */
 
-#include <Digit.h>
+#include <PureDigit.h>
 
-Digit digit;
+PureDigit digit;
 
 //Setup variables
 int encPos = 1;
