@@ -20,6 +20,9 @@
   It has a 2 Channel 12bit ADC In, 12bit DAC Out, a 24
   position rotary encoder with switch and a 7 segment LED display.
   
+  To install the library, click on "Download Zip" over there somewhere --->
+  Then follow the [Importing a .zip library how to](https://www.arduino.cc/en/Guide/Libraries#toc4).
+  
   ### Sketches   
   Noise, Clock Divider, Micro Tuner, Bit Crusher, Drums, Rhythm Player, Swing Machine, LFO, Step LFO,
   DC Level, Module Testing Functions, Frequency Counter, DC Meter
