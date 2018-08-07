@@ -27,9 +27,20 @@
   2. Follow the [Importing a .zip library how to](https://www.arduino.cc/en/Guide/Libraries#toc4).
   
   ### Sketches   
-  Noise, Clock Divider, Micro Tuner, Bit Crusher, Drums, Rhythm Player, Swing Machine, LFO, Step LFO,
-  DC Level, Module Testing Functions, Frequency Counter, DC Meter
-  
+  - [x] Noise
+  - [x] EmptySketch
+  - [ ] Clock Divider
+  - [ ] Micro Tuner
+  - [ ] Bit Crusher
+  - [ ] Drums
+  - [ ] Rhythm Player
+  - [ ] Swing Machine
+  - [ ] LFO
+  - [ ] Step LFO
+  - [x] DC Level
+  - [ ] Module Testing Functions
+  - [ ] Frequency Counter
+  - [ ] DC Meter
   
   ### Methods
   
