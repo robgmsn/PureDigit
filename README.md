@@ -40,16 +40,15 @@
   
   ### Example Sketch:
   ```
-  #include <Digit.h>
+  #include <Digit.h>                    //Include the Digit library
   
-  Digit digit;
+  Digit digit;                          //Create a Digit called digit. This object now has the methods above available to it.
   
   //Setup variables
-  int encPos = 1;
-  int cvIn, cvOut;
+  int encPos = 1;                       //Just some variables for us to use in the code
   
   void setup() {
-   digit.begin();
+   digit.begin();                       //Tell digit to configure its self.
   }
   
   void loop() {
