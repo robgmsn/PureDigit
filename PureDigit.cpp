@@ -31,9 +31,9 @@
   Example Sketch:
 
   <code>
-  #include <Digit.h>
+  #include <PureDigit.h>
 
-  Digit digit;
+  PureDigit digit;
 
   //Setup variables
   int encPos = 1;
@@ -59,7 +59,7 @@
 
 #include <Arduino.h>
 #include <SPI.h>
-#include "Digit.h"
+#include "PureDigit.h"
 
 //Setup Digit
 #define digitA 0 //30
@@ -84,12 +84,12 @@
 #define csADC 9 //13
 #define csDAC 10 //14
 
-Digit::Digit() {
+PureDigit::PureDigit() {
 
   int encAVal, encALast, encBVal = 0;
 }
 
-void Digit::begin() {
+void PureDigit::begin() {
 
   //Setup Digit Pins
   pinMode(digitA, OUTPUT);
@@ -126,7 +126,7 @@ void Digit::begin() {
   SPI.begin();
 }
 
-int Digit::encodeVal(int val) {
+int PureDigit::encodeVal(int val) {
   encAVal = digitalRead(encA);
   encBVal = digitalRead(encB);
   if (encAVal != encALast) {
@@ -140,7 +140,7 @@ int Digit::encodeVal(int val) {
   return val;
 }
 
-void Digit::displayLED(int digit, byte mode, bool dp) {
+void PureDigit::displayLED(int digit, byte mode, bool dp) {
   if (dp == 1) {
     digitalWrite(digitDP, LOW);
   } else {
@@ -356,7 +356,7 @@ void Digit::displayLED(int digit, byte mode, bool dp) {
   }
 }
 
-void Digit::dacWrite(int value) {
+void PureDigit::dacWrite(int value) {
 
   digitalWrite(csDAC, LOW);
   byte data = value >> 8;
@@ -370,7 +370,7 @@ void Digit::dacWrite(int value) {
   digitalWrite(csDAC, HIGH);
 }
 
-int Digit::adcRead(byte channel) {
+int PureDigit::adcRead(byte channel) {
 
   byte commandbits = B00001101;          //command bits - 0000, start, mode, chn, MSBF
   unsigned int b1 = 0;                   // get the return var's ready
