@@ -60,35 +60,35 @@
                               
   #### encodeVal(value)
   
-    Call this to increment or decrement a value with the rotary encoder.
+  Call this to increment or decrement a value with the rotary encoder.
   
   #### display(digit, mode, dp)
   
-    The display has two modes:
+  The display has two modes:
     
-    1. Standard 0 - 9 digital digit.
-    2. Positional representation with 12 values. Where the knob is pointing!
+  1. Standard 0 - 9 digital digit.
+  2. Positional representation with 12 values. Where the knob is pointing!
 
-    This uses the result of a modulo calculation so the value can be greater than 12 and it will keep rotating. It can't go less than zero though.
+  This uses the result of a modulo calculation so the value can be greater than 12 and it will keep rotating. It can't go less than zero though.
                                 
   #### displayOff()
   
-    Turns the display off. Useful if you want it to flash.
+  Turns the display off. Useful if you want it to flash.
   
   #### dacWrite(value)
   
-    Write a value to the DAC. Yes, it's got a 20V P2P voltage!! :D
+  Write a value to the DAC. Yes, it's got a 20V P2P voltage!! :D
              0    =   +10V
              2048 =   0V
              4095 =   -10V
   
   #### dacWriteCal(value)
     
-    Same as above, but uses the calibration settings. If you want the output to match the input, this is the method to use.
+  Same as above, but uses the calibration settings. If you want the output to match the input, this is the method to use.
   
   #### adcRead(channel)
     
-    Read a 20V P2P from the DAC, channel 1 or 2. Voltages as above.
+  Read a 20V P2P from the DAC, channel 1 or 2. Voltages as above.
   
   
   ### Example Sketch
