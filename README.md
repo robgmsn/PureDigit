@@ -46,15 +46,15 @@
   
   calibrate() - If the module hasn't been calibrated, it will run through a self calibration routine. You'll need a patch cable. 
   
-                              When it displays "1" patch from the output back into input 1. 
-                              Long Press the encoder.
-                              Patch from output into input 2.
-                              Long Press the encoder.
+   1. When it displays "1" patch from the output back into input 1. 
+   2. Long Press the encoder.
+   3. Patch from output into input 2.
+   4. Long Press the encoder.
                               
-                              It will then count down to zero and flash.
-                              The module is now calibrated.
+   It will then count down to zero and flash.
+   The module is now calibrated.
                               
-                              N.B. The calibration settings are stored in EEPROM, which is overwritten every time the module is flashed, therefor the calibration routing will run everytime the module is flashed.
+   N.B. The calibration settings are stored in EEPROM, which is overwritten every time the module is flashed, therefor the calibration routing will run everytime the module is flashed.
                               
   encodeVal(value) - Call this to increment or decrement a value with the rotary encoder.
   
