@@ -44,7 +44,9 @@
   
   ### Methods
   
-  calibrate() - If the module hasn't been calibrated, it will run through a self calibration routine. You'll need a patch cable. 
+  #### calibrate()
+  
+  If the module hasn't been calibrated, it will run through a self calibration routine. You'll need a patch cable. 
   
    1. When it displays "1" patch from the output back into input 1. 
    2. Long Press the encoder.
@@ -56,24 +58,37 @@
                               
    N.B. The calibration settings are stored in EEPROM, which is overwritten every time the module is flashed, therefor the calibration routing will run everytime the module is flashed.
                               
-  encodeVal(value) - Call this to increment or decrement a value with the rotary encoder.
+  #### encodeVal(value)
   
-  display(digit, mode, dp) - The display has two modes:
-                                1) Standard 0 - 9 digital digit.
-                                2) Positional representation with 12 values. Where the knob is pointing!
-                                   This uses the result of a modulo calculation so the value can be greater
-                                   than 12 and it will keep rotating. It can't go less than zero though.
+    Call this to increment or decrement a value with the rotary encoder.
+  
+  #### display(digit, mode, dp)
+  
+    The display has two modes:
+    
+    1. Standard 0 - 9 digital digit.
+    2. Positional representation with 12 values. Where the knob is pointing!
+
+    This uses the result of a modulo calculation so the value can be greater than 12 and it will keep rotating. It can't go less than zero though.
                                 
-  displayOff() - Turns the display off. Useful if you want it to flash.
+  #### displayOff()
   
-  dacWrite - Write a value to the DAC. Yes, it's got a 20V P2P voltage!! :D
+    Turns the display off. Useful if you want it to flash.
+  
+  #### dacWrite(value)
+  
+    Write a value to the DAC. Yes, it's got a 20V P2P voltage!! :D
              0    =   +10V
              2048 =   0V
              4095 =   -10V
   
-  dacWriteCal - Same as above, but uses the calibration settings. If you want the output to match the input, this is the method to use.
+  #### dacWriteCal(value)
+    
+    Same as above, but uses the calibration settings. If you want the output to match the input, this is the method to use.
   
-  adcRead(channel) - Read a 20V P2P from the DAC, channel 1 or 2. Voltages as above.
+  #### adcRead(channel)
+    
+    Read a 20V P2P from the DAC, channel 1 or 2. Voltages as above.
   
   
   ### Example Sketch
