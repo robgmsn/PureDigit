@@ -12,7 +12,7 @@
   Open Source Synth Designs.
   
   ### Intro
-  This repo contains both the Library and Sketches for the GMSN! Pure Digit.
+  This repo contains both the Library and Example Sketches for the GMSN! Pure Digit.
   
   A small programmable utility module which accepts +/- 10V in,
   does some digital processing, and outputs a +/-10V signal.
@@ -27,7 +27,7 @@
   2. Follow the [Importing a .zip library how to](https://www.arduino.cc/en/Guide/Libraries#toc4).
   
   ### Sketches   
-  - [x] Noise
+  - [x] Random Sequencer
   - [x] EmptySketch
   - [ ] Clock Divider
   - [ ] Micro Tuner
@@ -44,6 +44,18 @@
   
   ### Methods
   
+  calibrate() - If the module hasn't been calibrated, it will run through a self calibration routine. You'll need a patch cable. 
+  
+                              When it displays "1" patch from the output back into input 1. 
+                              Long Press the encoder.
+                              Patch from output into input 2.
+                              Long Press the encoder.
+                              
+                              It will then count down to zero and flash.
+                              The module is now calibrated.
+                              
+                              N.B. The calibration settings are stored in EEPROM, which is overwritten every time the module is flashed, therefor the calibration routing will run everytime the module is flashed.
+                              
   encodeVal(value) - Call this to increment or decrement a value with the rotary encoder.
   
   display(digit, mode, dp) - The display has two modes:
@@ -51,11 +63,15 @@
                                 2) Positional representation with 12 values. Where the knob is pointing!
                                    This uses the result of a modulo calculation so the value can be greater
                                    than 12 and it will keep rotating. It can't go less than zero though.
+                                
+  displayOff() - Turns the display off. Useful if you want it to flash.
   
   dacWrite - Write a value to the DAC. Yes, it's got a 20V P2P voltage!! :D
              0    =   +10V
              2048 =   0V
              4095 =   -10V
+  
+  dacWriteCal - Same as above, but uses the calibration settings. If you want the output to match the input, this is the method to use.
   
   adcRead(channel) - Read a 20V P2P from the DAC, channel 1 or 2. Voltages as above.
   
