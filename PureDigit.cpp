@@ -1,65 +1,68 @@
 /*
-  GMSN! Pure Digit v1
-  28th July 2018
-  cc-by 4.0
-  Rob Spencer
-  gmsn.co.uk
-  forum.gmsn.co.uk
-  Open Source Synth Designs.
+   GMSN! Pure Digit v1
+   28th July 2018
+   cc-by 4.0
+   Rob Spencer
+   gmsn.co.uk
+   forum.gmsn.co.ukı
+   Open Source Synth Designs.
 
-  This library is used to control the GMSN! Pure Digit. A small programmable utility module which accepts +/- 10V in,
-  does some digital processing, and outputs a +/-10V signal. It has a 2 Channel 12bit ADC In, 12bit DAC Out, a 24
-  position rotary encoder with switch and a 7 segment LED display.
+   This library is used to control the GMSN! Pure Digit. A small programmable utility module which accepts +/- 10V in,
+   does some digital processing, and outputs a +/-10V signal. It has a 2 Channel 12bit ADC In, 12bit DAC Out, a 24
+   position rotary encoder with switch and a 7 segment LED display.
 
-  Examples include:   Noise, Clock Divider, Micro Tuner, Bit Crusher, Drums, Rhythm Player, Swing Machine, LFO, Step LFO,
-  DC Level, Module Testing Functions, Frequency Counter, DC Meter
+   Examples include:   Noise, Clock Divider, Micro Tuner, Bit Crusher, Drums, Rhythm Player, Swing Machine, LFO, Step LFO,
+   DC Level, Module Testing Functions, Frequency Counter, DC Meter
 
-  Methods:
-  encodeVal(value) - Call this to increment or decrement a value with the rotary encoder.
-  display(digit, mode, dp) - The display has two modes:
+   Methods:
+   encodeVal(value) - Call this to increment or decrement a value with the rotary encoder.
+   getSwitchState() - Returns a bool of the switch state, either on or off. It's a good
+                     idea to call this from the main loop, so it's continuously polling.
+   display(digit, mode, dp) - The display has two modes:
                                 1) Standard 0 - 9 digital digit.
                                 2) Positional representation with 12 values. Where the knob is pointing!
                                    This uses the result of a modulo calculation so the value can be greater
                                    than 12 and it will keep rotating. It can't go less than zero though.
-  dacWrite - Write a value to the DAC. Yes, it's got a 20V P2P voltage!! :D
+   dacWrite - Write a value to the DAC. Yes, it's got a 20V P2P voltage!! :D
              0    =   +10V
              2048 =   0V
              4095 =   -10V
 
-  adcRead(channel) - Read a 20V P2P from the DAC, channel 1 or 2. Voltages as above.
+   adcRead(channel) - Read a 20V P2P from the DAC, channel 1 or 2. Voltages as above.
 
-  Example Sketch:
+   Example Sketch:
 
-  <code>
-  #include <PureDigit.h>
+   <code>
+ #include <PureDigit.h>
 
-  PureDigit digit;
+   PureDigit digit;
 
-  //Setup variables
-  int encPos = 1;
-  int cvIn, cvOut;
+   //Setup variables
+   int encPos = 1;
+   int cvIn, cvOut;
 
 
-  void setup() {
+   void setup() {
 
    digit.begin();
 
-  }
+   }
 
-  void loop() {
+   void loop() {
 
      encPos = digit.encodeVal(encPos);  //Increment or decrement the varible encPos
      digit.displayLED(encPos, 2, 0);    //Display the value of encPos as a Positional Representation with no decimal point
      digit.dacWrite(random(4095));      //Output a random value between 0 and 4095, which is analogue +/- 10V
      delay(encPos);                     //Delay for encPos milliseconds.
 
-  }
-  </code>
-*/
+   }
+   </code>
+ */
 
 #include <Arduino.h>
 #include <SPI.h>
 #include "PureDigit.h"
+#include <EEPROM.h>
 
 //Setup Digit
 #define digitA 0 //30
@@ -72,10 +75,10 @@
 #define digitDP 3 //1
 
 //Setup Encoder
-  //SW
+//SW
 #define sw 5 //9
 
-  //Encoder
+//Encoder
 #define encA 7 //11
 #define encB 6 //10
 
@@ -86,303 +89,479 @@
 
 PureDigit::PureDigit() {
 
-  int encAVal, encALast, encBVal = 0;
+        int encAVal, encALast, encBVal = 0;
+        float Ge1 = 0;
+        float Ge2 = 0;
+        float Oe1 = 0;
+        float Oe2 = 0;
 }
 
 void PureDigit::begin() {
 
-  //Setup Digit Pins
-  pinMode(digitA, OUTPUT);
-  pinMode(digitB, OUTPUT);
-  pinMode(digitC, OUTPUT);
-  pinMode(digitD, OUTPUT);
-  pinMode(digitE, OUTPUT);
-  pinMode(digitF, OUTPUT);
-  pinMode(digitG, OUTPUT);
-  pinMode(digitDP, OUTPUT);
+        //Setup Digit Pins
+        pinMode(digitA, OUTPUT);
+        pinMode(digitB, OUTPUT);
+        pinMode(digitC, OUTPUT);
+        pinMode(digitD, OUTPUT);
+        pinMode(digitE, OUTPUT);
+        pinMode(digitF, OUTPUT);
+        pinMode(digitG, OUTPUT);
+        pinMode(digitDP, OUTPUT);
 
-  digitalWrite(digitA, HIGH);
-  digitalWrite(digitB, HIGH);
-  digitalWrite(digitC, HIGH);
-  digitalWrite(digitD, HIGH);
-  digitalWrite(digitE, HIGH);
-  digitalWrite(digitF, HIGH);
-  digitalWrite(digitG, HIGH);
-  digitalWrite(digitDP, HIGH);
+        digitalWrite(digitA, HIGH);
+        digitalWrite(digitB, HIGH);
+        digitalWrite(digitC, HIGH);
+        digitalWrite(digitD, HIGH);
+        digitalWrite(digitE, HIGH);
+        digitalWrite(digitF, HIGH);
+        digitalWrite(digitG, HIGH);
+        digitalWrite(digitDP, HIGH);
 
-  //Setup Encoder Pins
-  pinMode(sw, INPUT);
-  pinMode(encA, INPUT);
-  pinMode(encB, INPUT);
-  digitalWrite(encA, HIGH);
-  digitalWrite(encB, HIGH);
+        //Setup Encoder Pins
+        pinMode(sw, INPUT);
+        pinMode(encA, INPUT);
+        pinMode(encB, INPUT);
+        digitalWrite(encA, HIGH);
+        digitalWrite(encB, HIGH);
 
-  //Setup DAC/ADC Pins
-  pinMode(csADC, OUTPUT);
-  pinMode(csDAC, OUTPUT);
+        //Setup DAC/ADC Pins
+        pinMode(csADC, OUTPUT);
+        pinMode(csDAC, OUTPUT);
 
-  digitalWrite(csADC, HIGH);
-  digitalWrite(csDAC, HIGH);
-  SPI.begin();
+        digitalWrite(csADC, HIGH);
+        digitalWrite(csDAC, HIGH);
+        SPI.begin();
+
+        byte calFlag = EEPROM.read(0);
+        if (calFlag == 0) {
+                EEPROM.get(1, Ge1);
+                EEPROM.get(5, Ge2);
+                EEPROM.get(9, Oe1);
+                EEPROM.get(13, Oe2);
+        } else {
+                for (int x = 0; x < 10; x++) {
+                        displayLED(8, 1, 0);
+                        delay(200);
+                        displayOff();
+                        delay(100);
+                }
+                calibrate();
+        }
 }
 
 int PureDigit::encodeVal(int val) {
-  encAVal = digitalRead(encA);
-  encBVal = digitalRead(encB);
-  if (encAVal != encALast) {
-    if (encAVal == encBVal) {
-      val--;
-    } else {
-      val++;
-    }
-    encALast = encAVal;
-  }
-  return val;
+        encAVal = digitalRead(encA);
+        encBVal = digitalRead(encB);
+        if (encAVal != encALast) {
+                if (encAVal == encBVal) {
+                        val--;
+                } else {
+                        val++;
+                }
+                encALast = encAVal;
+        }
+        return val;
+}
+
+bool PureDigit::getSwitchState() {
+        bool swState = !digitalRead(sw);
+        return swState;
+}
+
+void PureDigit::displayOff() {
+        digitalWrite(digitA, HIGH);
+        digitalWrite(digitB, HIGH);
+        digitalWrite(digitC, HIGH);
+        digitalWrite(digitD, HIGH);
+        digitalWrite(digitE, HIGH);
+        digitalWrite(digitF, HIGH);
+        digitalWrite(digitG, HIGH);
 }
 
 void PureDigit::displayLED(int digit, byte mode, bool dp) {
-  if (dp == 1) {
-    digitalWrite(digitDP, LOW);
-  } else {
-    digitalWrite(digitDP, HIGH);
-  }
-  if (mode == 1) {
-    switch (digit) {
-      case 0:
-        digitalWrite(digitA, LOW);
-        digitalWrite(digitB, HIGH);
-        digitalWrite(digitC, LOW);
-        digitalWrite(digitD, LOW);
-        digitalWrite(digitE, LOW);
-        digitalWrite(digitF, LOW);
-        digitalWrite(digitG, LOW);
-        break;
-      case 1:
-        digitalWrite(digitA, HIGH);
-        digitalWrite(digitB, HIGH);
-        digitalWrite(digitC, HIGH);
-        digitalWrite(digitD, HIGH);
-        digitalWrite(digitE, LOW);
-        digitalWrite(digitF, LOW);
-        digitalWrite(digitG, HIGH);
-        break;
-      case 2:
-        digitalWrite(digitA, HIGH);
-        digitalWrite(digitB, LOW);
-        digitalWrite(digitC, LOW);
-        digitalWrite(digitD, LOW);
-        digitalWrite(digitE, HIGH);
-        digitalWrite(digitF, LOW);
-        digitalWrite(digitG, LOW);
-        break;
-      case 3:
-        digitalWrite(digitA, HIGH);
-        digitalWrite(digitB, LOW);
-        digitalWrite(digitC, HIGH);
-        digitalWrite(digitD, LOW);
-        digitalWrite(digitE, LOW);
-        digitalWrite(digitF, LOW);
-        digitalWrite(digitG, LOW);
-        break;
-      case 4:
-        digitalWrite(digitA, LOW);
-        digitalWrite(digitB, LOW);
-        digitalWrite(digitC, HIGH);
-        digitalWrite(digitD, HIGH);
-        digitalWrite(digitE, LOW);
-        digitalWrite(digitF, LOW);
-        digitalWrite(digitG, HIGH);
-        break;
-      case 5:
-        digitalWrite(digitA, LOW);
-        digitalWrite(digitB, LOW);
-        digitalWrite(digitC, HIGH);
-        digitalWrite(digitD, LOW);
-        digitalWrite(digitE, LOW);
-        digitalWrite(digitF, HIGH);
-        digitalWrite(digitG, LOW);
-        break;
-      case 6:
-        digitalWrite(digitA, LOW);
-        digitalWrite(digitB, LOW);
-        digitalWrite(digitC, LOW);
-        digitalWrite(digitD, LOW);
-        digitalWrite(digitE, LOW);
-        digitalWrite(digitF, HIGH);
-        digitalWrite(digitG, HIGH);
-        break;
-      case 7:
-        digitalWrite(digitA, HIGH);
-        digitalWrite(digitB, HIGH);
-        digitalWrite(digitC, HIGH);
-        digitalWrite(digitD, HIGH);
-        digitalWrite(digitE, LOW);
-        digitalWrite(digitG, LOW);
-        digitalWrite(digitF, LOW);
-        break;
-      case 8:
-        digitalWrite(digitA, LOW);
-        digitalWrite(digitB, LOW);
-        digitalWrite(digitC, LOW);
-        digitalWrite(digitD, LOW);
-        digitalWrite(digitE, LOW);
-        digitalWrite(digitF, LOW);
-        digitalWrite(digitG, LOW);
-        break;
-      case 9:
-        digitalWrite(digitA, LOW);
-        digitalWrite(digitB, LOW);
-        digitalWrite(digitC, HIGH);
-        digitalWrite(digitD, HIGH);
-        digitalWrite(digitE, LOW);
-        digitalWrite(digitF, LOW);
-        digitalWrite(digitG, LOW);
-        break;
-    }
-  } else if (mode = 2) {
+        if (dp == 1) {
+                digitalWrite(digitDP, LOW);
+        } else {
+                digitalWrite(digitDP, HIGH);
+        }
+        if (mode == 1) {
+                switch (digit) {
+                case 0:
+                        digitalWrite(digitA, LOW);
+                        digitalWrite(digitB, HIGH);
+                        digitalWrite(digitC, LOW);
+                        digitalWrite(digitD, LOW);
+                        digitalWrite(digitE, LOW);
+                        digitalWrite(digitF, LOW);
+                        digitalWrite(digitG, LOW);
+                        break;
+                case 1:
+                        digitalWrite(digitA, HIGH);
+                        digitalWrite(digitB, HIGH);
+                        digitalWrite(digitC, HIGH);
+                        digitalWrite(digitD, HIGH);
+                        digitalWrite(digitE, LOW);
+                        digitalWrite(digitF, LOW);
+                        digitalWrite(digitG, HIGH);
+                        break;
+                case 2:
+                        digitalWrite(digitA, HIGH);
+                        digitalWrite(digitB, LOW);
+                        digitalWrite(digitC, LOW);
+                        digitalWrite(digitD, LOW);
+                        digitalWrite(digitE, HIGH);
+                        digitalWrite(digitF, LOW);
+                        digitalWrite(digitG, LOW);
+                        break;
+                case 3:
+                        digitalWrite(digitA, HIGH);
+                        digitalWrite(digitB, LOW);
+                        digitalWrite(digitC, HIGH);
+                        digitalWrite(digitD, LOW);
+                        digitalWrite(digitE, LOW);
+                        digitalWrite(digitF, LOW);
+                        digitalWrite(digitG, LOW);
+                        break;
+                case 4:
+                        digitalWrite(digitA, LOW);
+                        digitalWrite(digitB, LOW);
+                        digitalWrite(digitC, HIGH);
+                        digitalWrite(digitD, HIGH);
+                        digitalWrite(digitE, LOW);
+                        digitalWrite(digitF, LOW);
+                        digitalWrite(digitG, HIGH);
+                        break;
+                case 5:
+                        digitalWrite(digitA, LOW);
+                        digitalWrite(digitB, LOW);
+                        digitalWrite(digitC, HIGH);
+                        digitalWrite(digitD, LOW);
+                        digitalWrite(digitE, LOW);
+                        digitalWrite(digitF, HIGH);
+                        digitalWrite(digitG, LOW);
+                        break;
+                case 6:
+                        digitalWrite(digitA, LOW);
+                        digitalWrite(digitB, LOW);
+                        digitalWrite(digitC, LOW);
+                        digitalWrite(digitD, LOW);
+                        digitalWrite(digitE, LOW);
+                        digitalWrite(digitF, HIGH);
+                        digitalWrite(digitG, HIGH);
+                        break;
+                case 7:
+                        digitalWrite(digitA, HIGH);
+                        digitalWrite(digitB, HIGH);
+                        digitalWrite(digitC, HIGH);
+                        digitalWrite(digitD, HIGH);
+                        digitalWrite(digitE, LOW);
+                        digitalWrite(digitG, LOW);
+                        digitalWrite(digitF, LOW);
+                        break;
+                case 8:
+                        digitalWrite(digitA, LOW);
+                        digitalWrite(digitB, LOW);
+                        digitalWrite(digitC, LOW);
+                        digitalWrite(digitD, LOW);
+                        digitalWrite(digitE, LOW);
+                        digitalWrite(digitF, LOW);
+                        digitalWrite(digitG, LOW);
+                        break;
+                case 9:
+                        digitalWrite(digitA, LOW);
+                        digitalWrite(digitB, LOW);
+                        digitalWrite(digitC, HIGH);
+                        digitalWrite(digitD, HIGH);
+                        digitalWrite(digitE, LOW);
+                        digitalWrite(digitF, LOW);
+                        digitalWrite(digitG, LOW);
+                        break;
+                }
+        } else if (mode = 2) {
 
-    digit = digit % 12;
+                digit = digit % 12;
 
-    switch (digit) {
-      case 0:
-        digitalWrite(digitA, HIGH);
-        digitalWrite(digitB, HIGH);
-        digitalWrite(digitC, HIGH);
-        digitalWrite(digitD, LOW);
-        digitalWrite(digitE, HIGH);
-        digitalWrite(digitF, HIGH);
-        digitalWrite(digitG, HIGH);
-        break;
-      case 1:
-        digitalWrite(digitA, HIGH);
-        digitalWrite(digitB, HIGH);
-        digitalWrite(digitC, LOW);
-        digitalWrite(digitD, LOW);
-        digitalWrite(digitE, HIGH);
-        digitalWrite(digitF, HIGH);
-        digitalWrite(digitG, HIGH);
-        break;
-      case 2:
-        digitalWrite(digitA, HIGH);
-        digitalWrite(digitB, HIGH);
-        digitalWrite(digitC, LOW);
-        digitalWrite(digitD, HIGH);
-        digitalWrite(digitE, HIGH);
-        digitalWrite(digitF, HIGH);
-        digitalWrite(digitG, HIGH);
-        break;
-      case 3:
-        digitalWrite(digitA, LOW);
-        digitalWrite(digitB, HIGH);
-        digitalWrite(digitC, LOW);
-        digitalWrite(digitD, HIGH);
-        digitalWrite(digitE, HIGH);
-        digitalWrite(digitF, HIGH);
-        digitalWrite(digitG, HIGH);
-        break;
-      case 4:
-        digitalWrite(digitA, LOW);
-        digitalWrite(digitB, HIGH);
-        digitalWrite(digitC, HIGH);
-        digitalWrite(digitD, HIGH);
-        digitalWrite(digitE, HIGH);
-        digitalWrite(digitF, HIGH);
-        digitalWrite(digitG, HIGH);
-        break;
-      case 5:
-        digitalWrite(digitA, LOW);
-        digitalWrite(digitB, HIGH);
-        digitalWrite(digitC, HIGH);
-        digitalWrite(digitD, HIGH);
-        digitalWrite(digitE, HIGH);
-        digitalWrite(digitF, HIGH);
-        digitalWrite(digitG, LOW);
-        break;
-      case 6:
-        digitalWrite(digitA, HIGH);
-        digitalWrite(digitB, HIGH);
-        digitalWrite(digitC, HIGH);
-        digitalWrite(digitD, HIGH);
-        digitalWrite(digitE, HIGH);
-        digitalWrite(digitF, HIGH);
-        digitalWrite(digitG, LOW);
-        break;
-      case 7:
-        digitalWrite(digitA, HIGH);
-        digitalWrite(digitB, HIGH);
-        digitalWrite(digitC, HIGH);
-        digitalWrite(digitD, HIGH);
-        digitalWrite(digitE, HIGH);
-        digitalWrite(digitF, LOW);
-        digitalWrite(digitG, LOW);
-        break;
-      case 8:
-        digitalWrite(digitA, HIGH);
-        digitalWrite(digitB, HIGH);
-        digitalWrite(digitC, HIGH);
-        digitalWrite(digitD, HIGH);
-        digitalWrite(digitE, HIGH);
-        digitalWrite(digitF, LOW);
-        digitalWrite(digitG, HIGH);
-        break;
-      case 9:
-        digitalWrite(digitA, HIGH);
-        digitalWrite(digitB, HIGH);
-        digitalWrite(digitC, HIGH);
-        digitalWrite(digitD, HIGH);
-        digitalWrite(digitE, LOW);
-        digitalWrite(digitF, LOW);
-        digitalWrite(digitG, HIGH);
-        break;
-      case 10:
-        digitalWrite(digitA, HIGH);
-        digitalWrite(digitB, HIGH);
-        digitalWrite(digitC, HIGH);
-        digitalWrite(digitD, HIGH);
-        digitalWrite(digitE, LOW);
-        digitalWrite(digitF, HIGH);
-        digitalWrite(digitG, HIGH);
-        break;
-      case 11:
-        digitalWrite(digitA, HIGH);
-        digitalWrite(digitB, HIGH);
-        digitalWrite(digitC, HIGH);
-        digitalWrite(digitD, LOW);
-        digitalWrite(digitE, LOW);
-        digitalWrite(digitF, HIGH);
-        digitalWrite(digitG, HIGH);
-        break;
-    }
-  }
+                switch (digit) {
+                case 0:
+                        digitalWrite(digitA, HIGH);
+                        digitalWrite(digitB, HIGH);
+                        digitalWrite(digitC, HIGH);
+                        digitalWrite(digitD, LOW);
+                        digitalWrite(digitE, HIGH);
+                        digitalWrite(digitF, HIGH);
+                        digitalWrite(digitG, HIGH);
+                        break;
+                case 1:
+                        digitalWrite(digitA, HIGH);
+                        digitalWrite(digitB, HIGH);
+                        digitalWrite(digitC, LOW);
+                        digitalWrite(digitD, LOW);
+                        digitalWrite(digitE, HIGH);
+                        digitalWrite(digitF, HIGH);
+                        digitalWrite(digitG, HIGH);
+                        break;
+                case 2:
+                        digitalWrite(digitA, HIGH);
+                        digitalWrite(digitB, HIGH);
+                        digitalWrite(digitC, LOW);
+                        digitalWrite(digitD, HIGH);
+                        digitalWrite(digitE, HIGH);
+                        digitalWrite(digitF, HIGH);
+                        digitalWrite(digitG, HIGH);
+                        break;
+                case 3:
+                        digitalWrite(digitA, LOW);
+                        digitalWrite(digitB, HIGH);
+                        digitalWrite(digitC, LOW);
+                        digitalWrite(digitD, HIGH);
+                        digitalWrite(digitE, HIGH);
+                        digitalWrite(digitF, HIGH);
+                        digitalWrite(digitG, HIGH);
+                        break;
+                case 4:
+                        digitalWrite(digitA, LOW);
+                        digitalWrite(digitB, HIGH);
+                        digitalWrite(digitC, HIGH);
+                        digitalWrite(digitD, HIGH);
+                        digitalWrite(digitE, HIGH);
+                        digitalWrite(digitF, HIGH);
+                        digitalWrite(digitG, HIGH);
+                        break;
+                case 5:
+                        digitalWrite(digitA, LOW);
+                        digitalWrite(digitB, HIGH);
+                        digitalWrite(digitC, HIGH);
+                        digitalWrite(digitD, HIGH);
+                        digitalWrite(digitE, HIGH);
+                        digitalWrite(digitF, HIGH);
+                        digitalWrite(digitG, LOW);
+                        break;
+                case 6:
+                        digitalWrite(digitA, HIGH);
+                        digitalWrite(digitB, HIGH);
+                        digitalWrite(digitC, HIGH);
+                        digitalWrite(digitD, HIGH);
+                        digitalWrite(digitE, HIGH);
+                        digitalWrite(digitF, HIGH);
+                        digitalWrite(digitG, LOW);
+                        break;
+                case 7:
+                        digitalWrite(digitA, HIGH);
+                        digitalWrite(digitB, HIGH);
+                        digitalWrite(digitC, HIGH);
+                        digitalWrite(digitD, HIGH);
+                        digitalWrite(digitE, HIGH);
+                        digitalWrite(digitF, LOW);
+                        digitalWrite(digitG, LOW);
+                        break;
+                case 8:
+                        digitalWrite(digitA, HIGH);
+                        digitalWrite(digitB, HIGH);
+                        digitalWrite(digitC, HIGH);
+                        digitalWrite(digitD, HIGH);
+                        digitalWrite(digitE, HIGH);
+                        digitalWrite(digitF, LOW);
+                        digitalWrite(digitG, HIGH);
+                        break;
+                case 9:
+                        digitalWrite(digitA, HIGH);
+                        digitalWrite(digitB, HIGH);
+                        digitalWrite(digitC, HIGH);
+                        digitalWrite(digitD, HIGH);
+                        digitalWrite(digitE, LOW);
+                        digitalWrite(digitF, LOW);
+                        digitalWrite(digitG, HIGH);
+                        break;
+                case 10:
+                        digitalWrite(digitA, HIGH);
+                        digitalWrite(digitB, HIGH);
+                        digitalWrite(digitC, HIGH);
+                        digitalWrite(digitD, HIGH);
+                        digitalWrite(digitE, LOW);
+                        digitalWrite(digitF, HIGH);
+                        digitalWrite(digitG, HIGH);
+                        break;
+                case 11:
+                        digitalWrite(digitA, HIGH);
+                        digitalWrite(digitB, HIGH);
+                        digitalWrite(digitC, HIGH);
+                        digitalWrite(digitD, LOW);
+                        digitalWrite(digitE, LOW);
+                        digitalWrite(digitF, HIGH);
+                        digitalWrite(digitG, HIGH);
+                        break;
+                }
+        }
 }
 
 void PureDigit::dacWrite(int value) {
+        digitalWrite(csDAC, LOW);
+        constrain(value, 0, 4095);
+        value = value + 12288;
+        SPI.transfer16(value);
+        digitalWrite(csDAC, HIGH);
+}
 
-  digitalWrite(csDAC, LOW);
-  byte data = value >> 8;
-  data = data & B00001111;
-  data = data | B00110000;
-  SPI.transfer(data);
-
-  data = value;
-  SPI.transfer(data);
-
-  digitalWrite(csDAC, HIGH);
+void PureDigit::dacWriteCal(int value) {
+        value = float(value);
+        value = (value - Oe1) / Ge1;
+        value = constrain(value, 0, 4095);
+        dacWrite(value);
 }
 
 int PureDigit::adcRead(byte channel) {
 
-  byte commandbits = B00001101;          //command bits - 0000, start, mode, chn, MSBF
-  unsigned int b1 = 0;                   // get the return var's ready
-  unsigned int b2 = 0;
-  commandbits |= ((channel - 1) << 1);   // update the command bit to select either ch 1 or 2
-  digitalWrite(csADC, LOW);
-  SPI.transfer(commandbits);             // send out the command bits
-  const int hi = SPI.transfer(b1);       // read back the result high byte
-  const int lo = SPI.transfer(b2);       // then the low byte
-  digitalWrite(csADC, HIGH);
-  b1 = lo + (hi << 8);                   // assemble the two bytes into a word
-  //return b1;
-  return (b1 >> 3);                      // We have got a 12bit answer but strip LSB's if
-  // required >>4 ==10 bit (0->1024), >>2 ==12bit (0->4096)
+        int commandbits = 40960;
+        if (channel == 2) {
+                commandbits = commandbits + 16384;
+        }
+        unsigned int result;
+        digitalWrite(csADC, LOW);
+        SPI.transfer(1);
+        result = SPI.transfer16(commandbits);
+        result = result & 4095;
+        digitalWrite(csADC, HIGH);
+        return result;
+}
+
+void PureDigit::calibrate(){
+        int n1, n2, i;
+        int stage = 1;
+        bool swState, lastSwState;
+
+//loop
+        while (stage < 6) {
+                switch (stage) {
+                case 1:
+                        //Connect Output to Input 1 & Wait
+                        flashLED(1, 1, 500);
+                        break;
+
+                case 2:
+                        //Output 512 and read ADC
+                        dacWrite(512);
+                        delay(50);
+                        n1 = adcRead(1);
+                        delay(50);
+
+                        //Output 3584 and read ADC
+                        dacWrite(3584);
+                        delay(50);
+                        n2 = adcRead(1);
+
+                        //Calculate Ge1 = (n2 - n1)/(3584 - 512)
+                        Ge1 = (n2 - n1) / (3584.0 - 512.0);
+
+                        //Calculate Oe1 = n1 - (Ge * 512)
+                        Oe1 = n1 - (Ge1 * 512.0);
+
+                        flashLED(1, 10, 50);
+                        stage = 3;
+                        break;
+
+                case 3:
+                        //Connect Output to Input 2 & Wait
+                        flashLED(2, 1, 500);
+                        break;
+
+                case 4:
+                        //Output 512 and read ADC
+                        dacWrite(512);
+                        delay(50);
+                        n1 = adcRead(2);
+                        delay(50);
+
+                        //Output 3584 and read ADC
+                        dacWrite(3584);
+                        delay(50);
+                        n2 = adcRead(2);
+
+                        //Calculate Ge1 = (n2 - n1)/(3584 - 512)
+                        Ge2 = (n2 - n1) / (3584.0 - 512.0);
+
+                        //Calculate Oe1 = n1 - (Ge * 512)
+                        Oe2 = n1 - (Ge2 * 512.0);
+
+                        flashLED(2, 10, 50);
+                        stage = 5;
+                        break;
+
+                case 5:
+                        flashLED(9, 20, 5);
+                        flashLED(8, 20, 5);
+                        flashLED(7, 20, 5);
+                        flashLED(6, 20, 5);
+                        flashLED(5, 10, 5);
+                        flashLED(4, 20, 5);
+                        flashLED(3, 20, 5);
+                        flashLED(2, 20, 5);
+                        flashLED(1, 20, 5);
+                        displayLED(8, 1, 0);
+                        delay(200);
+                        displayOff();
+                        delay(100);
+                        displayLED(8, 1, 0);
+                        delay(200);
+                        displayOff();
+                        delay(100);
+                        displayLED(8, 1, 0);
+                        delay(200);
+                        displayOff();
+                        delay(100);
+                        displayLED(8, 1, 0);
+                        delay(200);
+                        displayOff();
+
+                        //Store Ge1, Ge2, Oe1 and Oe2
+                        EEPROM.put(1, Ge1);
+                        EEPROM.put(5, Ge2);
+                        EEPROM.put(9, Oe1);
+                        EEPROM.put(13, Oe2);
+                        EEPROM.write(0, 0);
+                        delay(100);
+                        displayLED(8, 1, 0);
+                        delay(200);
+                        displayOff();
+                        delay(100);
+                        stage = 6;
+                        break;
+
+
+                }
+
+//Poll Button
+
+                swState = getSwitchState();
+                if (swState == 1 && swState != lastSwState) {
+                        switch (stage) {
+                        case 1:
+                                stage = 2;
+                                break;
+                        case 3:
+                                stage = 4;
+                                break;
+                        case 6:
+                                stage = 7;
+                                break;
+                        case 8:
+                                stage = 9;
+                                break;
+                        }
+
+                        lastSwState = 1;
+                } else {
+                        lastSwState = 0;
+                }
+        }
+}
+
+void PureDigit::flashLED(int number, int repeats, int delays) {
+        int i = 0;
+        while ( i < repeats) {
+                displayLED(number, 1, 1);
+                delay(delays);
+                displayLED(number, 1, 0);
+                delay(delays);
+                i++;
+        }
 }

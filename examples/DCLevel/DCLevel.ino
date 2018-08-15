@@ -1,5 +1,3 @@
-
-
 /*
   GMSN! Pure Digit
   28th July 2018

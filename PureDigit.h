@@ -16,6 +16,8 @@
 
   Methods:
   encodeVal(value) - Call this to increment or decrement a value with the rotary encoder.
+  getSwitchState() - Returns a bool of the switch state, either on or off. It's a good
+                     idea to call this from the main loop, so it's continuously polling.
   display(digit, mode, dp) - The display has two modes:
                                 1) Standard 0 - 9 digital digit.
                                 2) Positional representation with 12 values. Where the knob is pointing!
@@ -68,13 +70,19 @@ class PureDigit {
 public:
   PureDigit();
   void begin();
+  void calibrate();
   int encodeVal(int val);
+  bool getSwitchState();
   void displayLED(int digit, byte mode, bool dp);
+  void displayOff();
   void dacWrite(int value);
+  void dacWriteCal(int value);
   int adcRead(byte channel);
 
 private:
+  void flashLED(int number, int repeats, int delays);
   int encAVal, encALast, encBVal;
+  float Ge1, Ge2, Oe1, Oe2;
 };
 
 #endif
