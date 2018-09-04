@@ -69,6 +69,7 @@
 class PureDigit {
 public:
   PureDigit();
+  void dontCalibrate();
   void begin();
   void calibrate();
   int encodeVal(int val);

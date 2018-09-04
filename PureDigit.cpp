@@ -87,6 +87,8 @@
 #define csADC 9 //13
 #define csDAC 10 //14
 
+boolean doCalibrate=true;
+
 PureDigit::PureDigit() {
 
         int encAVal, encALast, encBVal = 0;
@@ -94,6 +96,10 @@ PureDigit::PureDigit() {
         float Ge2 = 0;
         float Oe1 = 0;
         float Oe2 = 0;
+}
+
+void PureDigit::dontCalibrate(){
+     doCalibrate=false;
 }
 
 void PureDigit::begin() {
@@ -133,6 +139,7 @@ void PureDigit::begin() {
         SPI.begin();
 
         byte calFlag = EEPROM.read(0);
+        if (doCalibrate==true){
         if (calFlag == 0) {
                 EEPROM.get(1, Ge1);
                 EEPROM.get(5, Ge2);
@@ -146,6 +153,10 @@ void PureDigit::begin() {
                         delay(100);
                 }
                 calibrate();
+        }
+        }else{
+            Oe1=0.0;
+            Ge1=1.0;
         }
 }
 
