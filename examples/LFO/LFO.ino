@@ -22,7 +22,10 @@ float Step1 = 2 * Pi / Shape;
 float Step2 = 2 * Pi / (512 - Shape);
 float twoPi = 2.0 * Pi;
 float Rate = 0;
+float RateMultiplier = 1;
 //Setup variables
+int encPos = 1;
+int cvIn, cvOut;
 
 void writeSin(float Value) {
   int Out = (int)(Range * Value);
@@ -38,7 +41,7 @@ void writeSquare(float Value) {
 
 void writeTriangle(float Value) {
   int Out = (int)(Range * Value);
- digit.dacWrite(Out);
+  digit.dacWrite(Out);
 
 }
 
@@ -48,21 +51,38 @@ void writeCos(float Value) {
 
 }
 
+float dv=755;
+float dv2=345;
+float newRange=4096-dv;
+float newRange2=4096-dv2;
 void setup() {
   digit.dontCalibrate();
   digit.begin();
 
 }
 
-void setShape() {
-  int an1=512; //Rate
-  int an2=512; //Shape
-  Rate = 1*an1 + 512;
-  float divisor = 1024 / Rate;
-  Shape = an2 / divisor + 1.0;
 
-  Step1 = twoPi / Shape;
-  Step2 = twoPi / ((Rate + 1) - Shape);
+float divisor=0.0;
+void setShape() {
+  int an1 = digit.adcRead(1)-dv; //Rate
+
+  if (an1<=0){
+    an1=1;
+  }
+  int an2 = digit.adcRead(2)-dv2; //Shape
+  if (an2<=0){
+    an2=1;
+  }
+  float Percent=an2/newRange2;
+  float Percent2=1.0-Percent;
+  //int an1=64;
+  //int an2=2048;
+  //Rate =  an1 + 1+RateMultiplier;
+  //divisor  = newRange2 / Rate;
+  //Shape = an2 / divisor;
+
+  Step1 = twoPi / (an1*Percent);
+  Step2 = twoPi/(an1*Percent2);
 }
 
 float Wave = 0;
@@ -71,22 +91,61 @@ float Triangle = 0;
 float Cos = 0;
 float lastRad;
 
-
+int lastEnc = -1;
 void loop() {
-// put your main code here, to run repeatedly:
+  // put your main code here, to run repeatedly:
+  encPos = digit.encodeVal(encPos);
+  if (encPos != lastEnc) {
+    digit.displayLED(encPos, 1, 0);
+    lastEnc = encPos;
+  }
+  //DEbug code to display something like the input voltage
+  //float in=(float)(digit.adcRead(2));
+  //int val =round(((in/4095.0)*10.0));
+  //digit.displayLED(val, 1, 0);
+  switch (encPos) {
+    case 1:
+    case 2:
+    case 3:
+    case 4: RateMultiplier = 1; break;
+    case 5:
+    case 6:
+    case 7:
+    case 8: RateMultiplier = newRange; break;
+    default: RateMultiplier = 1; break;
+
+  }
   setShape();
   rad = rad + Square * Step1 + (1 - Square) * Step2;
   if (rad > twoPi)
     rad = 0.0;
-  Wave = 0.5 * sin(rad) + 0.5;
-  writeSin(Wave);
-  /*
+
   Square = (int)(rad / Pi);
-  writeSquare(Square);
   Triangle = (-1 * (Pi / 2.0) + Square * Pi + (0 - Square) * (rad - (Square * Pi)) + (1 - Square) * (rad - Square * Pi));
-  writeTriangle(0.24 * Triangle + 0.5);
-  Cos = sin(Triangle);
-  writeCos(0.5 * Cos + 0.5);
-  lastRad = rad;
-  */
+
+  switch (encPos) {
+    case 0:
+    case 1:
+    case 5:
+      Wave = 0.5 * sin(rad) + 0.5;
+      writeSin(Wave);
+      break;
+    case 2:
+    case 6:
+      writeSquare(Square);
+      break;
+    case 3:
+    case 7:
+      writeTriangle(0.24 * Triangle + 0.5);
+      break;
+    case 4:
+    case 8:
+    case 9:
+      Cos = sin(Triangle);
+      writeCos(0.5 * Cos + 0.5);
+    default:
+      break;
+  }
+
+
 }
