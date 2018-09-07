@@ -75,11 +75,7 @@ void setShape() {
   }
   float Percent=an2/newRange2;
   float Percent2=1.0-Percent;
-  //int an1=64;
-  //int an2=2048;
-  //Rate =  an1 + 1+RateMultiplier;
-  //divisor  = newRange2 / Rate;
-  //Shape = an2 / divisor;
+  
 
   Step1 = twoPi / (an1*Percent);
   Step2 = twoPi/(an1*Percent2);
@@ -99,10 +95,7 @@ void loop() {
     digit.displayLED(encPos, 1, 0);
     lastEnc = encPos;
   }
-  //DEbug code to display something like the input voltage
-  //float in=(float)(digit.adcRead(2));
-  //int val =round(((in/4095.0)*10.0));
-  //digit.displayLED(val, 1, 0);
+  
   switch (encPos) {
     case 1:
     case 2:
