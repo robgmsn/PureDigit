@@ -64,7 +64,7 @@ void setup() {
 
 float divisor=0.0;
 void setShape() {
-  int an1 = digit.adcRead(1)-dv; //Rate
+  int an1 = digit.adcRead(1)-dv+RateMultiplier; //Rate
 
   if (an1<=0){
     an1=1;
