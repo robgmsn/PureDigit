@@ -84,7 +84,7 @@
 
 
 //Setup SPI Bus
-#define csADC 9 //13
+#define csADC A1 //9 //13 or 24
 #define csDAC 10 //14
 
 boolean doCalibrate=true;
