@@ -4,8 +4,15 @@
   cc-by 4.0
   Rob Spencer
 
-  Empty Skietch
-  Bare minimum needed for Pure Digit
+  VCO
+  Yes!! Huge personal technological breakthrough!! Timer controlled writes to the DAC.
+  It started off with 44kHz sample rate,. but this had to be reduced so the other processing in the main loop could run.
+  It's now down to 15kHz with no real impact on the quality. This is just a tiny module to learn SMD soldering,
+  so I'm pretty happy with the result. Obviously things would be pretty different with a fast DSP chip through 16bit DACs :)
+  The frequency runs from about 10Hz, up to just over 2Khz, so plenty of subbass and bass goodness to play with.
+
+  Encoder controls the frequency.
+  Push and turn to change the waveform: Sine & Saw. Should really add Square too....
 */
 
 #include <PureDigit.h>
@@ -51,7 +58,7 @@ int sineTable[512] = {2048, 2054, 2060, 2066, 2073, 2079, 2085, 2091, 2098, 2104
 
 void setup() {
 
-  digit.dontCalibrate();
+  //digit.dontCalibrate();
   digit.begin();
 
   // initialize timer1
@@ -60,9 +67,9 @@ void setup() {
   TCCR1B = 0;
   TCNT1  = 0;
 
-  OCR1A = 1333;            // compare match register 20MHz/1/44kHz = 454
+  OCR1A = 1333;            // compare match register 20MHz/1/44kHz = 454  | 20Mhz/1/15kHz = 1333
   TCCR1B |= (1 << WGM12);   // CTC mode
-  TCCR1B |= (1 << CS10);    // 256 prescaler
+  TCCR1B |= (1 << CS10);    // 1 prescaler
   TIMSK1 |= (1 << OCIE1A);  // enable timer compare interrupt
   interrupts();             // enable all interrupts
 

@@ -4,8 +4,8 @@
   cc-by 4.0
   Rob Spencer
 
-  Empty Skietch
-  Bare minimum needed for Pure Digit
+  BitCrusher
+  Turn the encoder to increaser the crush level.
 */
 
 #include <PureDigit.h>

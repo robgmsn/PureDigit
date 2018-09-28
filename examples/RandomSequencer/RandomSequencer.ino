@@ -5,8 +5,9 @@
   28th July 2018
   cc-by 4.0
   Rob Spencer
-  
-  Noise
+
+  RandomSequencer
+  Writes random values to the DAC. Encoder controls the rate.
 */
 
 #include <PureDigit.h>
