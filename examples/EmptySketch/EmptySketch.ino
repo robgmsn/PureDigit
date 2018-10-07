@@ -15,7 +15,7 @@ PureDigit digit;
 //Setup variables
 
 void setup() {
-
+  //digit.dontCalibrate();
   digit.begin();
 
 }
