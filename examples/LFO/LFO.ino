@@ -4,8 +4,20 @@
   cc-by 4.0
   Rob Spencer
 
-  Empty Skietch
-  Bare minimum needed for Pure Digit
+  
+  LFO 
+  This code by Andy Cobley
+  Rate is controlled by CV1, Shape by CV2. The shape changes the duty cycle, for a Square wave this gives PWM, Triangle from +saw to triangle to -Saw. There others similarly.
+
+Encoder position
+
+1: Sine
+2: Square
+3: Triangle
+4: Sine based on Triangle (can produce a nice output)
+
+5,6,7,8 the same but slower cycles
+9 Same as 4 but even slower.
 */
 
 #include <PureDigit.h>
@@ -51,13 +63,14 @@ void writeCos(float Value) {
 
 }
 
-float dv=755;
-float dv2=345;
+float dv=0; //These nembers where used for offsets if the input resistors are not correct
+float dv2=0;
 float newRange=4096-dv;
 float newRange2=4096-dv2;
 void setup() {
   digit.dontCalibrate();
   digit.begin();
+  int i=0;
 
 }
 
@@ -105,6 +118,7 @@ void loop() {
     case 6:
     case 7:
     case 8: RateMultiplier = newRange; break;
+    case 9: RateMultiplier = 2*newRange; break;
     default: RateMultiplier = 1; break;
 
   }
