@@ -1,3 +1,5 @@
+#include <PureDigit.h>
+
 /*
   GMSN! Pure Digit
   28th July 2018
@@ -7,7 +9,9 @@
   
   LFO 
   This code by Andy Cobley
-  Rate is controlled by CV1, Shape by CV2. The shape changes the duty cycle, for a Square wave this gives PWM, Triangle from +saw to triangle to -Saw. There others similarly.
+  Rate is controlled by CV1, Shape by CV2. 
+  The shape changes the duty cycle, for a Square wave this gives PWM.
+  Triangle from +saw to triangle to -Saw. There others similarly.
 
 Encoder position
 
@@ -18,6 +22,7 @@ Encoder position
 
 4,5,6,7 the same but slower cycles
 Higher encoder positons give slower cycles still .
+Loops at 19 and 0
 */
 
 #include <PureDigit.h>
@@ -38,6 +43,9 @@ float RateMultiplier = 1;
 //Setup variables
 int encPos = 0;
 int cvIn, cvOut;
+
+int displayDelay=0;
+int DisplayNumCycles=0;
 
 void writeSin(float Value) {
   int Out = (int)(Range * Value);
@@ -72,6 +80,7 @@ void setup() {
   digit.dontCalibrate();
   digit.begin();
   digit.displayLED(encPos, 1, 0);
+  
 }
 
 
@@ -88,7 +97,8 @@ void setShape() {
   }
   float Percent=an2/newRange2;
   float Percent2=1.0-Percent;
-  
+  float t=0.02*(an1/100);
+  DisplayNumCycles=(int)(5/t);
 
   Step1 = twoPi / (an1*Percent);
   Step2 = twoPi/(an1*Percent2);
@@ -105,6 +115,7 @@ void loop() {
   // put your main code here, to run repeatedly:
   encPos = digit.encodeVal(encPos);
   if (encPos != lastEnc) {
+    displayDelay=0;
     if (encPos <0)
        encPos=19;
     if (encPos>19)
@@ -142,8 +153,13 @@ void loop() {
   }
   setShape();
   rad = rad + Square * Step1 + (1 - Square) * Step2;
-  if (rad > twoPi)
+  if (rad > twoPi){
     rad = 0.0;
+    displayDelay++;
+    if (displayDelay>DisplayNumCycles){
+       digit.displayRandom();
+    }
+  }
 
   Square = (int)(rad / Pi);
   Triangle = (-1 * (Pi / 2.0) + Square * Pi + (0 - Square) * (rad - (Square * Pi)) + (1 - Square) * (rad - Square * Pi));
