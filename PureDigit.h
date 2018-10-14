@@ -14,7 +14,21 @@
   Examples include:   Noise, Clock Divider, Micro Tuner, Bit Crusher, Drums, Rhythm Player, Swing Machine, LFO, Step LFO,
   DC Level, Module Testing Functions, Frequency Counter, DC Meter
 
-  See README.md for details on the available methods and calibrate routine.
+  Methods:
+  encodeVal(value) - Call this to increment or decrement a value with the rotary encoder.
+  getSwitchState() - Returns a bool of the switch state, either on or off. It's a good
+                     idea to call this from the main loop, so it's continuously polling.
+  display(digit, mode, dp) - The display has two modes:
+                                1) Standard 0 - 9 digital digit.
+                                2) Positional representation with 12 values. Where the knob is pointing!
+                                   This uses the result of a modulo calculation so the value can be greater
+                                   than 12 and it will keep rotating. It can't go less than zero though.
+  dacWrite - Write a value to the DAC. Yes, it's got a 20V P2P voltage!! :D
+             0    =   +10V
+             2048 =   0V
+             4095 =   -10V
+
+  adcRead(channel) - Read a 20V P2P from the DAC, channel 1 or 2. Voltages as above.
 
   Example Sketch:
 
@@ -60,6 +74,7 @@ public:
   void calibrate();
   int encodeVal(int val);
   bool getSwitchState();
+  void displayRandom();
   void displayLED(int digit, byte mode, bool dp);
   void displayOff();
   void dacWrite(int value);
