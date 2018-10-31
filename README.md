@@ -20,11 +20,13 @@
   It has a 2 Channel 12bit ADC In, 12bit DAC Out, a 24
   position rotary encoder with switch and a 7 segment LED display.
 
-  To install the library
+  ## To install the library
 
-  1. [Download the zip](https://github.com/robgmsn/PureDigit/archive/master.zip)
-
-  2. Follow the [Importing a .zip library how to](https://www.arduino.cc/en/Guide/Libraries#toc4).
+  The library is installed via the normal Arduino Library management system.
+  
+  1. From within the Arduino IDE, click on Sketch>Include Library>Manage Libraries...
+  
+  2. Search for "GMSN" and click install.
 
   ### Sketches   
   - [x] VCO
