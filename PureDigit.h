@@ -61,6 +61,7 @@ public:
   int encodeVal(int val);
   bool getSwitchState();
   void displayLED(int digit, byte mode, bool dp);
+  void displayLEDChar(char c, bool dp);
   void displayOff();
   void dacWrite(int value);
   void dacWriteCal(int value);

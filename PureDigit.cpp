@@ -175,6 +175,86 @@ void PureDigit::displayOff() {
         digitalWrite(digitG, HIGH);
 }
 
+void PureDigit::displayLEDChar(char c, bool dp) {
+        if (dp == 1) {
+                digitalWrite(digitDP, LOW);
+        } else {
+                digitalWrite(digitDP, HIGH);
+        }
+
+        switch (c) {
+          case '-':
+                digitalWrite(digitA, HIGH);
+                digitalWrite(digitB, LOW);
+                digitalWrite(digitC, HIGH);
+                digitalWrite(digitD, HIGH);
+                digitalWrite(digitE, HIGH);
+                digitalWrite(digitF, HIGH);
+                digitalWrite(digitG, HIGH);
+                break;
+
+          case 'M':
+                digitalWrite(digitA, LOW);
+                digitalWrite(digitB, HIGH);
+                digitalWrite(digitC, LOW);
+                digitalWrite(digitD, HIGH);
+                digitalWrite(digitE, LOW);
+                digitalWrite(digitF, LOW);
+                digitalWrite(digitG, LOW);
+                break;
+
+          case 'm':
+                digitalWrite(digitA, HIGH);
+                digitalWrite(digitB, LOW);
+                digitalWrite(digitC, LOW);
+                digitalWrite(digitD, HIGH);
+                digitalWrite(digitE, LOW);
+                digitalWrite(digitF, HIGH);
+                digitalWrite(digitG, HIGH);
+                break;
+
+          case 'C':
+                digitalWrite(digitA, LOW);
+                digitalWrite(digitB, HIGH);
+                digitalWrite(digitC, LOW);
+                digitalWrite(digitD, LOW);
+                digitalWrite(digitE, HIGH);
+                digitalWrite(digitF, HIGH);
+                digitalWrite(digitG, LOW);
+                break;
+
+          case 'P':
+                digitalWrite(digitA, LOW);
+                digitalWrite(digitB, LOW);
+                digitalWrite(digitC, LOW);
+                digitalWrite(digitD, HIGH);
+                digitalWrite(digitE, HIGH);
+                digitalWrite(digitF, LOW);
+                digitalWrite(digitG, LOW);
+                break;
+
+          case 'b': 
+                digitalWrite(digitA, LOW);
+                digitalWrite(digitB, LOW);
+                digitalWrite(digitC, LOW);
+                digitalWrite(digitD, LOW);
+                digitalWrite(digitE, LOW);
+                digitalWrite(digitF, HIGH);
+                digitalWrite(digitG, HIGH);
+                break;
+
+          case 'H':
+                digitalWrite(digitA, LOW);
+                digitalWrite(digitB, LOW);
+                digitalWrite(digitC, LOW);
+                digitalWrite(digitD, HIGH);
+                digitalWrite(digitE, LOW);
+                digitalWrite(digitF, LOW);
+                digitalWrite(digitG, HIGH);
+                break;
+        }
+}
+
 void PureDigit::displayLED(int digit, byte mode, bool dp) {
         if (dp == 1) {
                 digitalWrite(digitDP, LOW);
