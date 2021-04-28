@@ -2379,6 +2379,34 @@ http://www.bccomponents.com/</description>
 <text x="1.95" y="1.3" size="0.8" layer="25">&gt;NAME</text>
 <text x="1.95" y="-1.3" size="0.8" layer="27">&gt;VALUE</text>
 </package>
+<package name="PJS008U-3000" library_version="11" library_locally_modified="yes">
+<pad name="GND1" x="-4.3" y="-1.519" drill="0.9" shape="square"/>
+<pad name="GND2" x="4.3" y="-1.519" drill="0.9" shape="square"/>
+<pad name="P$1" x="-3.85" y="1.651" drill="0.7"/>
+<pad name="P$2" x="-2.75" y="2.751" drill="0.7"/>
+<pad name="P$3" x="-1.65" y="1.651" drill="0.7"/>
+<pad name="P$4" x="-0.55" y="2.751" drill="0.7"/>
+<pad name="P$5" x="0.55" y="1.651" drill="0.7"/>
+<pad name="P$6" x="1.65" y="2.751" drill="0.7"/>
+<pad name="P$7" x="2.75" y="1.651" drill="0.7"/>
+<pad name="P$8" x="3.85" y="2.751" drill="0.7"/>
+<wire x1="-6" y1="1.181" x2="6" y2="1.181" width="0.08" layer="51"/>
+<wire x1="6" y1="1.181" x2="6" y2="-1.119" width="0.08" layer="21"/>
+<wire x1="6" y1="-1.119" x2="-6" y2="-1.119" width="0.08" layer="51"/>
+<wire x1="-6" y1="-1.119" x2="-6.8" y2="-1.119" width="0.08" layer="21"/>
+<wire x1="-6.8" y1="-1.119" x2="-6.8" y2="1.181" width="0.08" layer="21"/>
+<wire x1="-6.8" y1="1.181" x2="-6" y2="1.181" width="0.08" layer="21"/>
+<wire x1="-6" y1="-1.119" x2="-6" y2="-1.919" width="0.06" layer="21"/>
+<wire x1="-6" y1="-1.919" x2="6" y2="-1.919" width="0.06" layer="21"/>
+<wire x1="6" y1="-1.919" x2="6" y2="-1.119" width="0.06" layer="21"/>
+<wire x1="-6" y1="1.181" x2="-6" y2="2.981" width="0.06" layer="21"/>
+<wire x1="-6" y1="2.981" x2="6" y2="2.981" width="0.06" layer="21"/>
+<wire x1="6" y1="2.981" x2="6" y2="1.181" width="0.06" layer="21"/>
+<wire x1="-6.265" y1="0.231" x2="4.965" y2="0.231" width="0.05" layer="51"/>
+<wire x1="4.965" y1="0.231" x2="4.965" y2="-0.619" width="0.05" layer="51"/>
+<wire x1="4.965" y1="-0.619" x2="-6.265" y2="-0.619" width="0.05" layer="51"/>
+<wire x1="-6.265" y1="-0.619" x2="-6.265" y2="0.231" width="0.05" layer="51"/>
+</package>
 </packages>
 <packages3d>
 <package3d name="R0805" urn="urn:adsk.eagle:package:27425978/2" type="box" library_version="11" library_locally_modified="yes">
@@ -3198,6 +3226,24 @@ No illumination</description>
 <wire x1="-7.62" y1="-7.62" x2="-7.62" y2="7.62" width="0.1524" layer="94"/>
 <text x="-7.62" y="10.16" size="1.27" layer="95">&gt;NAME</text>
 <text x="-7.62" y="8.382" size="1.27" layer="96">&gt;VALUE</text>
+</symbol>
+<symbol name="SOCKET_SD_CARD" library_version="11" library_locally_modified="yes">
+<wire x1="-2.54" y1="15.24" x2="10.16" y2="15.24" width="0.254" layer="94"/>
+<wire x1="10.16" y1="15.24" x2="10.16" y2="-15.24" width="0.254" layer="94"/>
+<wire x1="10.16" y1="-15.24" x2="-2.54" y2="-15.24" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="-15.24" x2="-2.54" y2="15.24" width="0.254" layer="94"/>
+<pin name="CLK/SCK" x="-7.62" y="2.54" length="middle"/>
+<pin name="CS/SS" x="-7.62" y="10.16" length="middle"/>
+<pin name="DI/MOSI" x="-7.62" y="7.62" length="middle"/>
+<pin name="DO/MISO" x="-7.62" y="-2.54" length="middle"/>
+<pin name="GND" x="-7.62" y="0" length="middle"/>
+<pin name="NC" x="-7.62" y="12.7" length="middle"/>
+<pin name="RSV" x="-7.62" y="-5.08" length="middle"/>
+<pin name="SHIELD@1" x="-7.62" y="-10.16" length="middle"/>
+<pin name="SHIELD@2" x="-7.62" y="-12.7" length="middle"/>
+<pin name="VCC/+" x="-7.62" y="5.08" length="middle"/>
+<text x="-2.54" y="15.748" size="1.778" layer="95">&gt;NAME</text>
+<text x="-2.54" y="-17.78" size="1.778" layer="96">&gt;VALUE</text>
 </symbol>
 </symbols>
 <devicesets>
@@ -4724,6 +4770,30 @@ Example: COM-09117</description>
 </device>
 </devices>
 </deviceset>
+<deviceset name="SOCKET_SD_CARD_VERTICAL" library_version="11" library_locally_modified="yes">
+<gates>
+<gate name="G$1" symbol="SOCKET_SD_CARD" x="-2.54" y="0"/>
+</gates>
+<devices>
+<device name="" package="PJS008U-3000">
+<connects>
+<connect gate="G$1" pin="CLK/SCK" pad="P$5"/>
+<connect gate="G$1" pin="CS/SS" pad="P$2"/>
+<connect gate="G$1" pin="DI/MOSI" pad="P$3"/>
+<connect gate="G$1" pin="DO/MISO" pad="P$7"/>
+<connect gate="G$1" pin="GND" pad="P$6"/>
+<connect gate="G$1" pin="NC" pad="P$1"/>
+<connect gate="G$1" pin="RSV" pad="P$8"/>
+<connect gate="G$1" pin="SHIELD@1" pad="GND1"/>
+<connect gate="G$1" pin="SHIELD@2" pad="GND2"/>
+<connect gate="G$1" pin="VCC/+" pad="P$4"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
 </devicesets>
 </library>
 </libraries>
@@ -4800,6 +4870,8 @@ Example: COM-09117</description>
 <part name="R10" library="GMSN" library_urn="urn:adsk.eagle:library:27425118" deviceset="RESISTOR_US" device="R0805" package3d_urn="urn:adsk.eagle:package:27425978/2" value="1k6"/>
 <part name="C14" library="GMSN" library_urn="urn:adsk.eagle:library:27425118" deviceset="CAPACITOR-US" device="C0805" package3d_urn="urn:adsk.eagle:package:27425887/2" value="100nF"/>
 <part name="GND20" library="GMSN" library_urn="urn:adsk.eagle:library:27425118" deviceset="GND" device=""/>
+<part name="U$3" library="GMSN" library_urn="urn:adsk.eagle:library:27425118" deviceset="SOCKET_SD_CARD_VERTICAL" device=""/>
+<part name="GND21" library="GMSN" library_urn="urn:adsk.eagle:library:27425118" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -4838,6 +4910,11 @@ Example: COM-09117</description>
 <attribute name="NAME" x="128.016" y="74.295" size="1.778" layer="95"/>
 <attribute name="VALUE" x="128.016" y="69.469" size="1.778" layer="96"/>
 </instance>
+<instance part="U$3" gate="G$1" x="170.18" y="124.46" smashed="yes">
+<attribute name="NAME" x="167.64" y="140.208" size="1.778" layer="95"/>
+<attribute name="VALUE" x="167.64" y="106.68" size="1.778" layer="96"/>
+</instance>
+<instance part="GND21" gate="1" x="157.48" y="106.68" smashed="yes" rot="MR0"/>
 </instances>
 <busses>
 <bus name="DIGIT:DIGITA,DIGITB,DIGITC,DIGITD,DIGITDP,DIGITE,DIGITF,DIGITG">
@@ -4912,6 +4989,20 @@ Example: COM-09117</description>
 <junction x="119.38" y="68.58"/>
 <pinref part="GND15" gate="1" pin="GND"/>
 </segment>
+<segment>
+<pinref part="U$3" gate="G$1" pin="GND"/>
+<wire x1="162.56" y1="124.46" x2="157.48" y2="124.46" width="0.1524" layer="91"/>
+<pinref part="U$3" gate="G$1" pin="SHIELD@1"/>
+<wire x1="162.56" y1="114.3" x2="157.48" y2="114.3" width="0.1524" layer="91"/>
+<wire x1="157.48" y1="114.3" x2="157.48" y2="111.76" width="0.1524" layer="91"/>
+<pinref part="U$3" gate="G$1" pin="SHIELD@2"/>
+<wire x1="157.48" y1="111.76" x2="157.48" y2="106.68" width="0.1524" layer="91"/>
+<wire x1="162.56" y1="111.76" x2="157.48" y2="111.76" width="0.1524" layer="91"/>
+<junction x="157.48" y="111.76"/>
+<wire x1="157.48" y1="124.46" x2="157.48" y2="114.3" width="0.1524" layer="91"/>
+<junction x="157.48" y="114.3"/>
+<pinref part="GND21" gate="1" pin="GND"/>
+</segment>
 </net>
 <net name="RST" class="0">
 <segment>
@@ -4937,6 +5028,11 @@ Example: COM-09117</description>
 <wire x1="81.28" y1="101.6" x2="83.82" y2="101.6" width="0.1524" layer="91"/>
 <label x="83.82" y="101.6" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="U$3" gate="G$1" pin="DO/MISO"/>
+<wire x1="162.56" y1="121.92" x2="154.94" y2="121.92" width="0.1524" layer="91"/>
+<label x="154.94" y="121.92" size="1.778" layer="95" rot="R180"/>
+</segment>
 </net>
 <net name="SCK" class="0">
 <segment>
@@ -4949,6 +5045,11 @@ Example: COM-09117</description>
 <wire x1="81.28" y1="99.06" x2="83.82" y2="99.06" width="0.1524" layer="91"/>
 <label x="83.82" y="99.06" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="U$3" gate="G$1" pin="CLK/SCK"/>
+<wire x1="162.56" y1="127" x2="154.94" y2="127" width="0.1524" layer="91"/>
+<label x="154.94" y="127" size="1.778" layer="95" rot="R180"/>
+</segment>
 </net>
 <net name="MOSI" class="0">
 <segment>
@@ -4960,6 +5061,11 @@ Example: COM-09117</description>
 <pinref part="IC4" gate="G$1" pin="11(MOSI)"/>
 <wire x1="81.28" y1="104.14" x2="83.82" y2="104.14" width="0.1524" layer="91"/>
 <label x="83.82" y="104.14" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="U$3" gate="G$1" pin="DI/MOSI"/>
+<wire x1="162.56" y1="132.08" x2="154.94" y2="132.08" width="0.1524" layer="91"/>
+<label x="154.94" y="132.08" size="1.778" layer="95" rot="R180"/>
 </segment>
 </net>
 <net name="CS1" class="0">
@@ -5003,6 +5109,11 @@ Example: COM-09117</description>
 <wire x1="119.38" y1="76.2" x2="127" y2="76.2" width="0.1524" layer="91"/>
 <junction x="119.38" y="76.2"/>
 <pinref part="C9" gate="G$1" pin="1"/>
+</segment>
+<segment>
+<pinref part="U$3" gate="G$1" pin="VCC/+"/>
+<wire x1="162.56" y1="129.54" x2="154.94" y2="129.54" width="0.1524" layer="91"/>
+<label x="154.94" y="129.54" size="1.778" layer="95" rot="R180"/>
 </segment>
 </net>
 <net name="DIGITDP" class="0">
@@ -5086,6 +5197,18 @@ Example: COM-09117</description>
 <pinref part="IC4" gate="G$1" pin="8"/>
 <wire x1="81.28" y1="111.76" x2="83.82" y2="111.76" width="0.1524" layer="91"/>
 <label x="83.82" y="111.76" size="1.778" layer="95"/>
+</segment>
+</net>
+<net name="CS3" class="0">
+<segment>
+<pinref part="U$3" gate="G$1" pin="CS/SS"/>
+<wire x1="162.56" y1="134.62" x2="154.94" y2="134.62" width="0.1524" layer="91"/>
+<label x="154.94" y="134.62" size="1.778" layer="95" rot="R180"/>
+</segment>
+<segment>
+<pinref part="IC4" gate="G$1" pin="A0"/>
+<wire x1="81.28" y1="157.48" x2="83.82" y2="157.48" width="0.1524" layer="91"/>
+<label x="83.82" y="157.48" size="1.778" layer="95"/>
 </segment>
 </net>
 </nets>
@@ -5896,6 +6019,12 @@ Example: COM-09117</description>
 </nets>
 </sheet>
 </sheets>
+<errors>
+<approved hash="104,1,78.74,73.66,ISP1,VCC,5V,,,"/>
+<approved hash="104,4,-25.4,60.96,IC6,VDD,5V,,,"/>
+<approved hash="104,3,27.94,-30.48,IC3P,V+,+12V,,,"/>
+<approved hash="104,3,27.94,-45.72,IC3P,V-,-12V,,,"/>
+</errors>
 </schematic>
 </drawing>
 <compatibility>
